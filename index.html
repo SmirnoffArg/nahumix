@@ -15,8 +15,6 @@
             align-items: center;
             min-height: 100vh;
             flex-direction: column;
-            
-            /* Nuevo fondo con hamburguesas pixeladas */
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23f7f7f7"/><g><path fill="%23DEB887" d="M10 20h20v10h-20zM20 15h20v10h-20zM30 10h20v10h-20zM40 5h20v10h-20z"/><path fill="%238B4513" d="M10 30h20v5h-20zM20 25h20v5h-20zM30 20h20v5h-20zM40 15h20v5h-20z"/><path fill="%2390EE90" d="M10 35h20v3h-20zM20 30h20v3h-20zM30 25h20v3h-20zM40 20h20v3h-20z"/><path fill="%23FFD700" d="M10 38h20v2h-20zM20 33h20v2h-20zM30 28h20v2h-20zM40 23h20v2h-20z"/><path fill="%23DEB887" d="M10 40h20v10h-20zM20 35h20v10h-20zM30 30h20v10h-20zM40 25h20v10h-20z"/></g><g transform="translate(50 50)"><path fill="%23DEB887" d="M10 20h20v10h-20zM20 15h20v10h-20zM30 10h20v10h-20zM40 5h20v10h-20z"/><path fill="%238B4513" d="M10 30h20v5h-20zM20 25h20v5h-20zM30 20h20v5h-20zM40 15h20v5h-20z"/><path fill="%2390EE90" d="M10 35h20v3h-20zM20 30h20v3h-20zM30 25h20v3h-20zM40 20h20v3h-20z"/><path fill="%23FFD700" d="M10 38h20v2h-20zM20 33h20v2h-20zM30 28h20v2h-20zM40 23h20v2h-20z"/><path fill="%23DEB887" d="M10 40h20v10h-20zM20 35h20v10h-20zM30 30h20v10h-20zM40 25h20v10h-20z"/></g></svg>');
             background-size: 100px 100px;
             background-repeat: repeat;
@@ -28,12 +26,19 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            position: relative; /* Agregado para posicionar el texto central */
+            position: relative;
+            /* Adaptación para móviles */
+            width: 90vw;
+            max-width: 800px;
         }
 
         #gameCanvas {
             display: block;
             background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 70%, #90EE90 70%, #90EE90 100%);
+            /* Adaptación para móviles */
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2 / 1;
         }
 
         #gameInfo {
@@ -65,6 +70,7 @@
             border-radius: 10px;
             text-align: center;
             display: none;
+            width: 80%; /* Adaptación para móviles */
         }
 
         .btn {
@@ -91,7 +97,7 @@
             font-size: 4em;
             font-weight: bold;
             text-shadow: 2px 2px 4px #000000;
-            z-index: 2; /* Asegura que el texto esté sobre el canvas */
+            z-index: 2;
         }
     </style>
 </head>
@@ -101,7 +107,7 @@
         <canvas id="gameCanvas" width="800" height="400"></canvas>
         <div id="gameInfo">
             <div id="score">Puntuación: 0</div>
-            <div id="instructions">CINTIA TIENE HAMBRE </div>
+            <div id="instructions">TOCA LA PANTALLA PARA SALTAR</div>
         </div>
         <div id="gameOver">
             <h2>¡PERDISTE POR PUTA!</h2>
@@ -142,7 +148,7 @@
             velocityY: 0,
             jumping: false,
             grounded: true,
-            color: '#87CEEB' // Color de la camiseta argentina
+            color: '#87CEEB'
         };
 
         // Obstáculos (ahora hamburguesas)
@@ -156,7 +162,6 @@
         // Hamburguesas de fondo
         let backgroundBurgers = [];
 
-        // Función para crear obstáculos (hamburguesas)
         function createObstacle() {
             obstacles.push({
                 x: canvas.width,
@@ -167,7 +172,6 @@
             });
         }
 
-        // Función para crear nubes
         function createCloud() {
             clouds.push({
                 x: canvas.width,
@@ -178,7 +182,6 @@
             });
         }
 
-        // Función para crear hamburguesas de fondo
         function createBackgroundBurger() {
             backgroundBurgers.push({
                 x: canvas.width,
@@ -189,15 +192,12 @@
             });
         }
 
-        // Función para dibujar a Messi (versión femenina)
         function drawMessi() {
-            // Modo arcoíris
             if (rainbowMode) {
                 const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
                 messi.color = colors[Math.floor(frameCount / 10) % colors.length];
             }
             
-            // Efectos especiales en modo dios
             if (godMode) {
                 ctx.shadowColor = '#FFD700';
                 ctx.shadowBlur = 20;
@@ -206,36 +206,29 @@
                 ctx.shadowBlur = 0;
             }
             
-            // Cuerpo de Messi (camiseta argentina)
             ctx.fillStyle = messi.color;
             ctx.fillRect(messi.x, messi.y + 15, messi.width, 20);
             
-            // Shorts más cortos estilo femenino
             ctx.fillStyle = '#000080';
             ctx.fillRect(messi.x + 8, messi.y + 35, 24, 10);
             
-            // Cabeza
             ctx.fillStyle = '#FDBCB4';
             ctx.beginPath();
             ctx.arc(messi.x + 20, messi.y + 10, 12, 0, Math.PI * 2);
             ctx.fill();
             
-            // Cabello largo y ondulado
             ctx.fillStyle = '#4A4A4A';
             ctx.beginPath();
             ctx.arc(messi.x + 20, messi.y + 5, 13, Math.PI, 2 * Math.PI);
             ctx.fill();
-            // Mechones laterales
             ctx.beginPath();
             ctx.arc(messi.x + 10, messi.y + 8, 6, 0, Math.PI);
             ctx.fill();
             ctx.beginPath();
             ctx.arc(messi.x + 30, messi.y + 8, 6, 0, Math.PI);
             ctx.fill();
-            // Coleta
             ctx.fillRect(messi.x + 35, messi.y + 10, 3, 15);
             
-            // Ojos más grandes y expresivos
             ctx.fillStyle = 'white';
             ctx.fillRect(messi.x + 14, messi.y + 6, 4, 4);
             ctx.fillRect(messi.x + 22, messi.y + 6, 4, 4);
@@ -243,7 +236,6 @@
             ctx.fillRect(messi.x + 15, messi.y + 7, 2, 2);
             ctx.fillRect(messi.x + 23, messi.y + 7, 2, 2);
             
-            // Pestañas
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -257,20 +249,17 @@
             ctx.lineTo(messi.x + 27, messi.y + 5);
             ctx.stroke();
             
-            // Sonrisa
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.arc(messi.x + 20, messi.y + 12, 3, 0, Math.PI);
             ctx.stroke();
             
-            // Número 10 en la camiseta
             ctx.fillStyle = 'white';
             ctx.font = '12px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('10', messi.x + 20, messi.y + 28);
             
-            // Piernas más estilizadas (animación simple)
             ctx.fillStyle = '#FDBCB4';
             let animSpeed = superSpeed ? 5 : 10;
             if (Math.floor(frameCount / animSpeed) % 2) {
@@ -281,37 +270,30 @@
                 ctx.fillRect(messi.x + 25, messi.y + 45, 5, 15);
             }
             
-            // Botines más pequeños y elegantes
             ctx.fillStyle = '#FF1493';
             ctx.fillRect(messi.x + 8, messi.y + 58, 8, 4);
             ctx.fillRect(messi.x + 24, messi.y + 58, 8, 4);
         }
 
-        // Función para dibujar hamburguesas de fondo
         function drawBackgroundBurgers() {
             backgroundBurgers.forEach(burger => {
                 ctx.save();
                 ctx.globalAlpha = burger.opacity;
                 
-                // Pan superior
                 ctx.fillStyle = '#DEB887';
                 ctx.beginPath();
                 ctx.arc(burger.x, burger.y, burger.size, Math.PI, 0);
                 ctx.fill();
                 
-                // Lechuga
                 ctx.fillStyle = '#90EE90';
                 ctx.fillRect(burger.x - burger.size + 5, burger.y, burger.size * 2 - 10, 3);
                 
-                // Carne
                 ctx.fillStyle = '#8B4513';
                 ctx.fillRect(burger.x - burger.size + 3, burger.y + 3, burger.size * 2 - 6, 6);
                 
-                // Queso
                 ctx.fillStyle = '#FFD700';
                 ctx.fillRect(burger.x - burger.size + 4, burger.y + 9, burger.size * 2 - 8, 3);
                 
-                // Pan inferior
                 ctx.fillStyle = '#DEB887';
                 ctx.fillRect(burger.x - burger.size + 2, burger.y + 12, burger.size * 2 - 4, 8);
                 
@@ -319,44 +301,35 @@
             });
         }
 
-        // Función para dibujar obstáculos (hamburguesas)
         function drawObstacles() {
             obstacles.forEach(obstacle => {
-                // Pan superior
                 ctx.fillStyle = '#DEB887';
                 ctx.beginPath();
                 ctx.arc(obstacle.x + obstacle.width/2, obstacle.y, 18, Math.PI, 0);
                 ctx.fill();
                 
-                // Semillas en el pan
                 ctx.fillStyle = '#8B4513';
                 ctx.fillRect(obstacle.x + 8, obstacle.y - 5, 2, 2);
                 ctx.fillRect(obstacle.x + 15, obstacle.y - 3, 2, 2);
                 ctx.fillRect(obstacle.x + 22, obstacle.y - 6, 2, 2);
                 
-                // Lechuga
                 ctx.fillStyle = '#90EE90';
                 ctx.fillRect(obstacle.x + 2, obstacle.y, obstacle.width - 4, 4);
                 
-                // Tomate
                 ctx.fillStyle = '#FF6347';
                 ctx.fillRect(obstacle.x + 3, obstacle.y + 4, obstacle.width - 6, 3);
                 
-                // Carne
                 ctx.fillStyle = '#8B4513';
                 ctx.fillRect(obstacle.x + 1, obstacle.y + 7, obstacle.width - 2, 8);
                 
-                // Queso
                 ctx.fillStyle = '#FFD700';
                 ctx.fillRect(obstacle.x + 2, obstacle.y + 15, obstacle.width - 4, 4);
                 
-                // Pan inferior
                 ctx.fillStyle = '#DEB887';
                 ctx.fillRect(obstacle.x, obstacle.y + 19, obstacle.width, 12);
             });
         }
 
-        // Función para dibujar nubes
         function drawClouds() {
             clouds.forEach(cloud => {
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
@@ -368,7 +341,6 @@
             });
         }
 
-        // Función para actualizar la física de Messi
         function updateMessi() {
             if (messi.jumping) {
                 let gravity = superJump ? 0.4 : 0.8;
@@ -384,7 +356,6 @@
             }
         }
 
-        // Función para hacer saltar a Messi
         function jump() {
             if (messi.grounded && gameRunning) {
                 messi.jumping = true;
@@ -394,7 +365,6 @@
             }
         }
 
-        // Función para actualizar obstáculos
         function updateObstacles() {
             let currentSpeed = superSpeed ? gameSpeed * 2 : gameSpeed;
             
@@ -408,7 +378,6 @@
             });
         }
 
-        // Función para actualizar hamburguesas de fondo
         function updateBackgroundBurgers() {
             backgroundBurgers.forEach((burger, index) => {
                 burger.x -= burger.speed;
@@ -419,7 +388,6 @@
             });
         }
 
-        // Función para actualizar nubes
         function updateClouds() {
             clouds.forEach((cloud, index) => {
                 cloud.x -= cloud.speed;
@@ -430,9 +398,8 @@
             });
         }
 
-        // Función para detectar colisiones
         function checkCollisions() {
-            if (godMode) return; // No hay colisiones en modo dios
+            if (godMode) return;
             
             obstacles.forEach(obstacle => {
                 if (messi.x < obstacle.x + obstacle.width &&
@@ -444,17 +411,14 @@
             });
         }
 
-        // Función para limpiar el canvas
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // Función para dibujar el suelo (césped)
         function drawGround() {
             ctx.fillStyle = '#228B22';
             ctx.fillRect(0, 350, canvas.width, 50);
             
-            // Líneas de césped
             ctx.strokeStyle = '#32CD32';
             ctx.lineWidth = 2;
             for (let i = 0; i < canvas.width; i += 30) {
@@ -465,7 +429,6 @@
             }
         }
 
-        // Función principal del juego
         function gameLoop() {
             if (!gameRunning) return;
 
@@ -484,32 +447,26 @@
             updateClouds();
             checkCollisions();
             
-            // Crear nuevos obstáculos
             if (frameCount % 120 === 0 && !noObstacles) {
                 createObstacle();
             }
             
-            // Crear nuevas nubes
             if (frameCount % 200 === 0) {
                 createCloud();
             }
             
-            // Crear hamburguesas de fondo
             if (frameCount % 80 === 0) {
                 createBackgroundBurger();
             }
             
-            // Aumentar velocidad gradualmente
             if (frameCount % 600 === 0) {
                 gameSpeed += 0.5;
             }
             
-            // Actualizar puntuación
             let scoreMultiplier = superSpeed ? 3 : 1;
             score += scoreMultiplier;
             scoreElement.textContent = `Puntuación: ${score}`;
             
-            // Mostrar hacks activos
             let hackStatus = '';
             if (godMode) hackStatus += ' 🛡️DIOS';
             if (superSpeed) hackStatus += ' ⚡VELOCIDAD';
@@ -521,7 +478,6 @@
                 scoreElement.textContent = `Puntuación: ${score} ${hackStatus}`;
             }
 
-            // Ocultar texto al iniciar el juego
             if (frameCount > 10) {
                 centerTextElement.style.display = 'none';
             }
@@ -529,14 +485,12 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Función para terminar el juego
         function gameOver() {
             gameRunning = false;
             finalScoreElement.textContent = score;
             gameOverElement.style.display = 'block';
         }
 
-        // Función para iniciar el juego
         function startGame() {
             gameRunning = true;
             gameSpeed = 3;
@@ -553,14 +507,12 @@
             messi.grounded = true;
             
             gameOverElement.style.display = 'none';
-            centerTextElement.style.display = 'block'; // Mostrar el texto al inicio
+            centerTextElement.style.display = 'block';
             
-            // Crear algunas nubes iniciales
             for (let i = 0; i < 3; i++) {
                 createCloud();
             }
             
-            // Crear algunas hamburguesas de fondo iniciales
             for (let i = 0; i < 2; i++) {
                 createBackgroundBurger();
             }
@@ -568,9 +520,7 @@
             gameLoop();
         }
 
-        // Función para mostrar mensaje de truco
         function showCheatMessage(message) {
-            // Crear elemento temporal para mostrar el mensaje
             const messageDiv = document.createElement('div');
             messageDiv.style.position = 'fixed';
             messageDiv.style.top = '20px';
@@ -589,32 +539,27 @@
             }, 2000);
         }
 
-        // Función para manejar códigos de trucos
         function handleCheatCodes() {
             let keysString = keysPressed.join('');
             
-            // GODMODE - Modo dios (G-O-D)
             if (keysString.includes('GOD')) {
                 godMode = !godMode;
                 keysPressed = [];
                 showCheatMessage(godMode ? 'MODO DIOS ACTIVADO!' : 'MODO DIOS DESACTIVADO!');
             }
             
-            // SPEED - Super velocidad (S-P-E-E-D)
             if (keysString.includes('SPEED')) {
                 superSpeed = !superSpeed;
                 keysPressed = [];
                 showCheatMessage(superSpeed ? 'SUPER VELOCIDAD ACTIVADA!' : 'VELOCIDAD NORMAL!');
             }
             
-            // JUMP - Super salto (J-U-M-P)
             if (keysString.includes('JUMP')) {
                 superJump = !superJump;
                 keysPressed = [];
                 showCheatMessage(superJump ? 'SUPER SALTO ACTIVADO!' : 'SALTO NORMAL!');
             }
             
-            // RAINBOW - Modo arcoíris (R-A-I-N-B-O-W)
             if (keysString.includes('RAINBOW')) {
                 rainbowMode = !rainbowMode;
                 if (!rainbowMode) messi.color = '#87CEEB';
@@ -622,7 +567,6 @@
                 showCheatMessage(rainbowMode ? 'MODO ARCOÍRIS ACTIVADO!' : 'COLORES NORMALES!');
             }
             
-            // CLEAR - Sin obstáculos (C-L-E-A-R)
             if (keysString.includes('CLEAR')) {
                 noObstacles = !noObstacles;
                 if (noObstacles) obstacles = [];
@@ -630,7 +574,6 @@
                 showCheatMessage(noObstacles ? 'SIN OBSTÁCULOS!' : 'OBSTÁCULOS ACTIVADOS!');
             }
             
-            // Limpiar array si es muy largo
             if (keysPressed.length > 10) {
                 keysPressed = [];
             }
@@ -642,7 +585,6 @@
                 e.preventDefault();
                 jump();
             } else {
-                // Registrar teclas para códigos de trucos
                 let key = e.key.toUpperCase();
                 if (key.match(/[A-Z]/)) {
                     keysPressed.push(key);
@@ -651,7 +593,12 @@
             }
         });
 
-        canvas.addEventListener('click', jump);
+        // Evento para clics (escritorio) y toques (móviles)
+        canvas.addEventListener('mousedown', jump);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita el zoom o scroll en móviles
+            jump();
+        });
 
         // Iniciar el juego automáticamente
         startGame();
