@@ -15,14 +15,20 @@
             align-items: center;
             min-height: 100vh;
             flex-direction: column;
+            
+            /* Nuevo fondo con hamburguesas pixeladas */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23f7f7f7"/><g><path fill="%23DEB887" d="M10 20h20v10h-20zM20 15h20v10h-20zM30 10h20v10h-20zM40 5h20v10h-20z"/><path fill="%238B4513" d="M10 30h20v5h-20zM20 25h20v5h-20zM30 20h20v5h-20zM40 15h20v5h-20z"/><path fill="%2390EE90" d="M10 35h20v3h-20zM20 30h20v3h-20zM30 25h20v3h-20zM40 20h20v3h-20z"/><path fill="%23FFD700" d="M10 38h20v2h-20zM20 33h20v2h-20zM30 28h20v2h-20zM40 23h20v2h-20z"/><path fill="%23DEB887" d="M10 40h20v10h-20zM20 35h20v10h-20zM30 30h20v10h-20zM40 25h20v10h-20z"/></g><g transform="translate(50 50)"><path fill="%23DEB887" d="M10 20h20v10h-20zM20 15h20v10h-20zM30 10h20v10h-20zM40 5h20v10h-20z"/><path fill="%238B4513" d="M10 30h20v5h-20zM20 25h20v5h-20zM30 20h20v5h-20zM40 15h20v5h-20z"/><path fill="%2390EE90" d="M10 35h20v3h-20zM20 30h20v3h-20zM30 25h20v3h-20zM40 20h20v3h-20z"/><path fill="%23FFD700" d="M10 38h20v2h-20zM20 33h20v2h-20zM30 28h20v2h-20zM40 23h20v2h-20z"/><path fill="%23DEB887" d="M10 40h20v10h-20zM20 35h20v10h-20zM30 30h20v10h-20zM40 25h20v10h-20z"/></g></svg>');
+            background-size: 100px 100px;
+            background-repeat: repeat;
         }
 
         #gameContainer {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border: 2px solid #535353;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative; /* Agregado para posicionar el texto central */
         }
 
         #gameCanvas {
@@ -75,17 +81,30 @@
         .btn:hover {
             background: #45a049;
         }
+
+        #centerText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFD700;
+            font-size: 4em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000000;
+            z-index: 2; /* Asegura que el texto esté sobre el canvas */
+        }
     </style>
 </head>
 <body>
     <div id="gameContainer">
+        <div id="centerText">CINTIA TIENE HAMBRE</div>
         <canvas id="gameCanvas" width="800" height="400"></canvas>
         <div id="gameInfo">
             <div id="score">Puntuación: 0</div>
-            <div id="instructions">CON ESPACIO SALTAS </div>
+            <div id="instructions">CINTIA TIENE HAMBRE </div>
         </div>
         <div id="gameOver">
-            <h2>¡PERDISTE PUTA!</h2>
+            <h2>¡PERDISTE POR PUTA!</h2>
             <p>POCOS PUNTOS: <span id="finalScore">0</span></p>
             <button class="btn" onclick="startGame()">¿QUIERES FRACASAR NUEVAMENTE?</button>
         </div>
@@ -97,6 +116,7 @@
         const scoreElement = document.getElementById('score');
         const gameOverElement = document.getElementById('gameOver');
         const finalScoreElement = document.getElementById('finalScore');
+        const centerTextElement = document.getElementById('centerText');
 
         // Variables del juego
         let gameRunning = false;
@@ -500,6 +520,11 @@
             if (hackStatus) {
                 scoreElement.textContent = `Puntuación: ${score} ${hackStatus}`;
             }
+
+            // Ocultar texto al iniciar el juego
+            if (frameCount > 10) {
+                centerTextElement.style.display = 'none';
+            }
             
             requestAnimationFrame(gameLoop);
         }
@@ -528,6 +553,7 @@
             messi.grounded = true;
             
             gameOverElement.style.display = 'none';
+            centerTextElement.style.display = 'block'; // Mostrar el texto al inicio
             
             // Crear algunas nubes iniciales
             for (let i = 0; i < 3; i++) {
